@@ -5,6 +5,8 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
@@ -20,6 +22,12 @@ class User implements UserInterface
     private $id;
 
     /**
+     * @Assert\NotBlank()
+     * @Assert\Email(
+     *     message = "The email '{{ value }}' is not a valid email",
+     *     mode="strict",
+     *     normalizer="trim"
+     * )
      * @ORM\Column(type="string", length=180, unique=true)
      */
     private $email;
@@ -32,15 +40,34 @@ class User implements UserInterface
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
+     * @Assert\NotBlank()
+     * @Assert\Length(
+     *     min="4",
+     *     minMessage="Your password is too short. Four characters minimum"
+     * )
      */
     private $password;
 
     /**
+     * @Assert\NotBlank()
+     * @Assert\Length(
+     *      min = 3,
+     *      max = 180,
+     *      minMessage = "Your firstname must be at least {{ limit }} characters long",
+     *      maxMessage = "Your firstname cannot be longer than {{ limit }} characters"
+     * )
      * @ORM\Column(type="string", length=255)
      */
     private $firstName;
 
     /**
+     * @Assert\NotBlank()
+     * @Assert\Length(
+     *      min = 3,
+     *      max = 180,
+     *      minMessage = "Your lastname must be at least {{ limit }} characters long",
+     *      maxMessage = "Your lastname cannot be longer than {{ limit }} characters"
+     * )
      * @ORM\Column(type="string", length=255)
      */
     private $lastName;
