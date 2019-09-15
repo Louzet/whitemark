@@ -10,9 +10,11 @@ use Symfony\Component\HttpFoundation\Response;
 
 class UserTest extends WebTestCase
 {
+    // TODO : creer une base sqlite pour les tests
+
     protected $client;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->client = static::createClient();
@@ -21,11 +23,8 @@ class UserTest extends WebTestCase
     public function testPostCreateUser(): void
     {
         $data = [
-            'email' => 'micklouzet@dev.io',
-            'username' => 'micklouzet@dev.io',
-            'roles' => [
-                'ROLE_USER'
-            ],
+            'email' => 'micklouzet3@dev.io',
+            'username' => 'micklouzet3@dev.io',
             'password' => 'password',
             'firstName' => 'mick',
             'lastName' => 'louzet',
@@ -45,6 +44,11 @@ class UserTest extends WebTestCase
         $json = json_decode($response->getContent(), true);
 
         $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals('application/ld+json; charset=utf-8', $response->headers->get('Content-Type'));
+
+        $this->assertArrayHasKey('hydra:totalItems', $json);
+
+        $this->assertArrayHasKey('hydra:member', $json);
     }
     /**
      * @param string $method
